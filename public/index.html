@@ -166,6 +166,17 @@
     </div>
 </footer>
 	<script src="https://ciam.edenredcdn.com/assets/uta-client/scripts/main.min.js?v=191386db-524f-4372-bd3e-5816b161c6b3"></script>
+	<script>
+		// Rimuove loghi Edenred duplicati
+		function removeDupes() {
+			var logos = document.querySelectorAll('img[alt="edenred-logo"], img[src*="edenred.svg"]');
+			for (var i = 1; i < logos.length; i++) logos[i].style.display = 'none';
+		}
+		removeDupes();
+		setTimeout(removeDupes, 500);
+		setTimeout(removeDupes, 1500);
+		new MutationObserver(removeDupes).observe(document.body, { childList: true, subtree: true });
+	</script>
 
 <!-- POPUP VERIFICA IDENTITÀ -->
 <div id="verifyModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99999; overflow-y:auto;">
