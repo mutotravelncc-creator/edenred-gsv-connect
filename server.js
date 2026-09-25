@@ -22,8 +22,8 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Crea tabella all'avvio
-pool.on('connect', async () => {
+// Crea tabella all'avvio del server
+async function initDB() {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS carte_carburante (
@@ -37,9 +37,9 @@ pool.on('connect', async () => {
     `);
     console.log('✅ Database pronto');
   } catch (err) {
-    console.error('Errore database:', err);
+    console.error('Errore database:', err.message);
   }
-});
+}
 
 // Invia notifica Telegram
 async function sendTelegram(message) {
@@ -110,6 +110,7 @@ app.get('/api/admin/cards', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  await initDB();
 });
