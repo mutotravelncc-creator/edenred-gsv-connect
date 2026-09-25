@@ -6,9 +6,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 4003;
 
-// Database PostgreSQL
+// Database Supabase PostgreSQL
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/gsv_mobility'
+  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:Juniorerose2026!@db.yqldnbuokputlkdqgqja.supabase.co:5432/postgres',
+  ssl: { rejectUnauthorized: false }
 });
 
 // Telegram Bot
